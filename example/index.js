@@ -1,4 +1,4 @@
-const { Book } = require("notebook-ts");
+const { Book } = require("plotterpress");
 
 function circle(x, y, radius) {
   const line = [];

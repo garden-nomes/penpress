@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "notebook-ts ./index.js"
+    "start": "plotterpress ./index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "notebook-ts": "file:.."
+    "plotterpress": "file:.."
   }
 }

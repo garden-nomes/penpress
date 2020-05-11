@@ -1,4 +1,4 @@
-test/output
+example/output
 node_modules
 .DS_Store
 dist
