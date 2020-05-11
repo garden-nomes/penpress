@@ -1,15 +1,21 @@
 import { DevServer } from "../src";
-import renderTestPage from "./render-page";
+import renderPage, { renderPageAlt } from "./render-page";
 
 function test() {
   // blank notebook
-  const devServer = new DevServer(renderTestPage, {
+  const devServer = new DevServer(renderPage, {
     sheetWidth: 8.5,
     sheetHeight: 11,
     units: "in"
   });
 
-  devServer.start(8080);
+  devServer.start();
+
+  let toggle = false;
+  setInterval(() => {
+    devServer.update(toggle ? renderPage : renderPageAlt);
+    toggle = !toggle;
+  }, 2000);
 }
 
 test();

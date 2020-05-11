@@ -73,10 +73,11 @@ html
         border-bottom-left-radius: 0;
       }
     script.
-      const ws = new WebSocket('/ws-reload')
-      ws.on('message' () => {
+      const ws = new WebSocket('#{wsUrl}')
+      ws.onmessage = event => {
+        console.log('reload received')
         location.reload();
-      });
+      }
 
   body
     .svg-container !{svg}

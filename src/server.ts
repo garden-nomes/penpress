@@ -1,7 +1,9 @@
 import express, { Express } from "express";
 import path from "path";
+import http from "http";
 import Book, { RenderPage, BookSettings } from "./book";
 import { renderSvg, RenderSettings } from "./svg";
+import WebSocket from "ws";
 
 const renderSettings: RenderSettings = {
   fill: "none",
@@ -12,10 +14,17 @@ const renderSettings: RenderSettings = {
 export default class DevServer {
   book: Book;
   app: Express;
+  server: http.Server;
+  wss: WebSocket.Server;
+  port: number = 8080;
 
   constructor(renderPage: RenderPage, settings: Partial<BookSettings>) {
     this.book = new Book(settings, renderPage);
+
     this.app = express();
+    this.server = http.createServer(this.app);
+    this.wss = new WebSocket.Server({ server: this.server, path: "/ws-reload" });
+
     this.configureExpress();
   }
 
@@ -28,8 +37,9 @@ export default class DevServer {
       const page = this.book.renderPage(pageNumber);
       const svg = renderSvg(page, renderSettings);
       const length = this.book.length;
+      const wsUrl = this.wsUrl;
 
-      res.render("view", { svg, pageNumber, length });
+      res.render("view", { svg, pageNumber, length, wsUrl });
     });
 
     this.app.get("/", (_, res) => {
@@ -37,9 +47,28 @@ export default class DevServer {
     });
   }
 
-  start(port: number) {
-    this.app.listen(port, () => {
-      console.log(`Listening at http://localhost:${port}`);
+  private get hostname(): string {
+    return `localhost:${this.port}`;
+  }
+
+  private get wsUrl(): string {
+    return `ws://${this.hostname}/ws-reload`;
+  }
+
+  private broadcast(data: any) {
+    this.wss.clients.forEach(ws => {
+      ws.send(data);
     });
+  }
+
+  start() {
+    this.server.listen(this.port, () => {
+      console.log(`Listening at http://${this.hostname}`);
+    });
+  }
+
+  update(renderPage: RenderPage) {
+    this.book.renderPageFn = renderPage;
+    this.broadcast("reload");
   }
 }
