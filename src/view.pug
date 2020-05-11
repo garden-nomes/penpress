@@ -84,8 +84,10 @@ html
     .toolbar-container
       .page-number page #{pageNumber}/#{length}
       .btn-container
-        a.btn.btn-first(href="/1") first
-        a.btn.btn-first(href=`/${length}`) last
+        if pageNumber > 1
+          a.btn.btn-first(href="/1") first
+        else
+          a.btn.btn-first.disabled(href="/1") first
         if pageNumber > 1
           a.btn.btn-back(href=`/${pageNumber - 1}`) back
         else
@@ -94,3 +96,7 @@ html
           a.btn.btn-forward(href=`/${pageNumber + 1}`) next
         else
           a.btn.btn-forward.disabled(href="#") next
+        if pageNumber < length
+          a.btn.btn-last(href=`/${length}`) last
+        else
+          a.btn.btn-last.disabled(href=`/${length}`) last

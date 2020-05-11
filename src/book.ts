@@ -47,7 +47,7 @@ export default class Book {
   public renderPageFn: RenderPage;
   public penWidth: number;
 
-  constructor(settings: Partial<BookSettings>, renderPage: RenderPage) {
+  constructor(renderPage: RenderPage, settings: Partial<BookSettings> = {}) {
     const mergedSettings = { ...Book.defaults, ...settings };
 
     this.length = mergedSettings.length;

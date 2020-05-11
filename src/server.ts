@@ -16,11 +16,11 @@ export default class DevServer {
   app: Express;
   server: http.Server;
   wss: WebSocket.Server;
-  port: number = 8080;
+  port: number;
 
-  constructor(renderPage: RenderPage, settings: Partial<BookSettings>) {
-    this.book = new Book(settings, renderPage);
-
+  constructor(book: Book, port: number = 8080) {
+    this.book = book;
+    this.port = port;
     this.app = express();
     this.server = http.createServer(this.app);
     this.wss = new WebSocket.Server({ server: this.server, path: "/ws-reload" });
@@ -61,14 +61,14 @@ export default class DevServer {
     });
   }
 
+  update(book: Book) {
+    this.book = book;
+    this.broadcast("reload");
+  }
+
   start() {
     this.server.listen(this.port, () => {
       console.log(`Listening at http://${this.hostname}`);
     });
-  }
-
-  update(renderPage: RenderPage) {
-    this.book.renderPageFn = renderPage;
-    this.broadcast("reload");
   }
 }

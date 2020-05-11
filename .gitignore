@@ -1,4 +1,4 @@
 test/output
 node_modules
-*.js
 .DS_Store
+dist
