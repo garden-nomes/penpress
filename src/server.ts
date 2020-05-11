@@ -1,9 +1,7 @@
-import express from "express";
+import express, { Express } from "express";
 import path from "path";
 import Book, { RenderPage, BookSettings } from "./book";
 import { renderSvg, RenderSettings } from "./svg";
-
-const PORT = 6969;
 
 const renderSettings: RenderSettings = {
   fill: "none",
@@ -11,31 +9,37 @@ const renderSettings: RenderSettings = {
   penWidth: 0.05
 };
 
-export default function runDevServer(
-  renderPage: RenderPage,
-  settings: Partial<BookSettings>
-) {
-  const book = new Book(settings, renderPage);
+export default class DevServer {
+  book: Book;
+  app: Express;
 
-  const app = express();
+  constructor(renderPage: RenderPage, settings: Partial<BookSettings>) {
+    this.book = new Book(settings, renderPage);
+    this.app = express();
+    this.configureExpress();
+  }
 
-  app.set("view engine", "pug");
-  app.set("views", path.resolve(__dirname));
+  private configureExpress() {
+    this.app.set("view engine", "pug");
+    this.app.set("views", path.resolve(__dirname));
 
-  app.get("/:pageNumber(\\d+)", (req, res) => {
-    const pageNumber = Number.parseInt(req.params.pageNumber);
-    const page = book.renderPage(pageNumber);
-    const svg = renderSvg(page, renderSettings);
-    const length = book.length;
+    this.app.get("/:pageNumber(\\d+)", (req, res) => {
+      const pageNumber = Number.parseInt(req.params.pageNumber);
+      const page = this.book.renderPage(pageNumber);
+      const svg = renderSvg(page, renderSettings);
+      const length = this.book.length;
 
-    res.render("view", { svg, pageNumber, length });
-  });
+      res.render("view", { svg, pageNumber, length });
+    });
 
-  app.get("/", (req, res) => {
-    res.redirect("/1");
-  });
+    this.app.get("/", (_, res) => {
+      res.redirect("/1");
+    });
+  }
 
-  app.listen(PORT, () => {
-    console.log(`Listening at http://localhost:${PORT}`);
-  });
+  start(port: number) {
+    this.app.listen(port, () => {
+      console.log(`Listening at http://localhost:${port}`);
+    });
+  }
 }

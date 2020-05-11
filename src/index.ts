@@ -5,7 +5,7 @@ import { renderSvg } from "./svg";
 
 export { RenderPage, PageContext } from "./book";
 export { Polyline } from "./polyline";
-export { default as runDevServer } from "./server";
+export { default as DevServer } from "./server";
 
 function zeroPad(num: number, width: number): string {
   const numberDigits = ("" + num).length;

@@ -72,6 +72,11 @@ html
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
       }
+    script.
+      const ws = new WebSocket('/ws-reload')
+      ws.on('message' () => {
+        location.reload();
+      });
 
   body
     .svg-container !{svg}
