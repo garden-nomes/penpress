@@ -21,6 +21,7 @@ export interface Document {
 
 export interface PageContext {
   pageNumber: number;
+  leftBinding: boolean;
   width: number;
   height: number;
 }
@@ -78,6 +79,7 @@ export default class Book {
 
     const polylines = this.renderPageFn({
       pageNumber: pageNumber,
+      leftBinding: pageNumber % 2 === 1,
       width: this.pageWidth,
       height: this.pageHeight
     });
