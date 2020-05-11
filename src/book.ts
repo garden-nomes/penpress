@@ -30,19 +30,32 @@ export interface RenderPage {
 }
 
 export default class Book {
-  length: number;
-  sheetsInSignature: number;
-  sheetWidth: number;
-  sheetHeight: number;
-  units: any;
-  renderPageFn: RenderPage;
+  static defaults: BookSettings = {
+    length: 128,
+    units: "in",
+    sheetsInSignature: 4,
+    sheetWidth: 8.5,
+    sheetHeight: 11,
+    penWidth: 0.05
+  };
 
-  constructor(settings: BookSettings, renderPage: RenderPage) {
-    this.length = settings.length;
-    this.sheetsInSignature = settings.sheetsInSignature;
-    this.sheetWidth = settings.sheetWidth;
-    this.sheetHeight = settings.sheetHeight;
-    this.units = settings.units;
+  public length: number;
+  public sheetsInSignature: number;
+  public sheetWidth: number;
+  public sheetHeight: number;
+  public units: any;
+  public renderPageFn: RenderPage;
+  public penWidth: number;
+
+  constructor(settings: Partial<BookSettings>, renderPage: RenderPage) {
+    const mergedSettings = { ...Book.defaults, ...settings };
+
+    this.length = mergedSettings.length;
+    this.sheetsInSignature = mergedSettings.sheetsInSignature;
+    this.sheetWidth = mergedSettings.sheetWidth;
+    this.sheetHeight = mergedSettings.sheetHeight;
+    this.units = mergedSettings.units;
+    this.penWidth = mergedSettings.penWidth;
     this.renderPageFn = renderPage;
   }
 
@@ -59,12 +72,12 @@ export default class Book {
   }
 
   renderPage(pageNumber: number): Document {
-    if (pageNumber >= this.length) {
+    if (pageNumber > this.length) {
       throw new Error("Page number is outside book length");
     }
 
     const polylines = this.renderPageFn({
-      pageNumber: pageNumber + 1,
+      pageNumber: pageNumber,
       width: this.pageWidth,
       height: this.pageHeight
     });
@@ -85,7 +98,7 @@ export default class Book {
         return [] as Polyline[];
       }
 
-      return this.renderPage(n).polylines;
+      return this.renderPage(n + 1).polylines;
     });
 
     pages[1] = translate(pages[1], [this.pageWidth, 0]);

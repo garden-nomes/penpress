@@ -5,6 +5,7 @@ import { renderSvg } from "./svg";
 
 export { RenderPage, PageContext } from "./book";
 export { Polyline } from "./polyline";
+export { default as runDevServer } from "./server";
 
 function zeroPad(num: number, width: number): string {
   const numberDigits = ("" + num).length;
@@ -38,22 +39,12 @@ export function exportNotebook(
     }
   });
 
-  const defaults: BookSettings = {
-    length: 128,
-    units: "in",
-    sheetsInSignature: 4,
-    sheetWidth: 8.5,
-    sheetHeight: 11,
-    penWidth: 0.05
-  };
-
-  const mergedSettings = { ...defaults, ...settings };
-  const book = new Book(mergedSettings, renderPage);
+  const book = new Book(settings || {}, renderPage);
 
   const renderSettings = {
     fill: "none",
     stroke: "black",
-    penWidth: mergedSettings.penWidth
+    penWidth: book.penWidth
   };
 
   // render front of

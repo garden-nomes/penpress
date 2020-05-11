@@ -1,7 +1,4 @@
-import { exportNotebook, RenderPage, Polyline } from "../src";
-import fs from "fs";
-import path from "path";
-import rimraf from "rimraf";
+import { Polyline, RenderPage } from "../src";
 
 function circle(x: number, y: number, radius: number): Polyline {
   const line: Polyline = [];
@@ -42,21 +39,4 @@ const renderTestPage: RenderPage = ({ width, height, pageNumber }) => {
   return lines;
 };
 
-function test() {
-  const outputDirectory = path.resolve(__dirname, "output");
-
-  if (fs.existsSync(outputDirectory)) {
-    rimraf.sync(outputDirectory);
-  }
-
-  fs.mkdirSync(outputDirectory);
-
-  // blank notebook
-  exportNotebook(renderTestPage, outputDirectory, {
-    sheetWidth: 8.5,
-    sheetHeight: 11,
-    units: "in"
-  });
-}
-
-test();
+export default renderTestPage;

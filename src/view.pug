@@ -1,0 +1,90 @@
+doctype html
+html
+  head
+    title Notebook Viewer
+    style(type="text/css").
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        background: #fafafa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+
+      .svg-container {
+        background: #fff;
+        box-shadow: 0 0 4px rgba(0,0,0,0.1);
+      }
+
+      .toolbar-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+        width: 25.5rem;
+      }
+
+      .page-number {
+        margin-right: 2rem;
+      }
+
+      .btn-container {
+        display: flex;
+      }
+
+      .btn {
+        display: block;
+        text-decoration: none;
+        color: white;
+        background: salmon;
+        border-radius: .25rem;
+        padding: .5rem 1rem;
+        box-shadow: 0 0 4px rgba(0,0,0,0.1);
+      }
+
+      .btn.disabled {
+        opacity: .5;
+        pointer-events: none;
+      }
+
+      .btn:hover:not(.disabled) {
+        background: pink;
+        color: salmon;
+        box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      }
+
+      .btn:not(:last-child):not(.btn-back) {
+        margin-right: .5rem;
+      }
+
+      .btn-back {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .btn-forward {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+  body
+    .svg-container !{svg}
+    .toolbar-container
+      .page-number page #{pageNumber}/#{length}
+      .btn-container
+        a.btn.btn-first(href="/1") first
+        a.btn.btn-first(href=`/${length}`) last
+        if pageNumber > 1
+          a.btn.btn-back(href=`/${pageNumber - 1}`) back
+        else
+          a.btn.btn-back.disabled(href="#") back
+        if pageNumber < length
+          a.btn.btn-forward(href=`/${pageNumber + 1}`) next
+        else
+          a.btn.btn-forward.disabled(href="#") next
