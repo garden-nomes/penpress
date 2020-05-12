@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import Book from "./book";
 import { renderSvg } from "./svg";
+import optimizePolylines from "./optimize-polylines";
 
 function zeroPad(num: number, width: number): string {
   const numberDigits = ("" + num).length;
@@ -37,9 +38,11 @@ export default function exportNotebook(book: Book, outputDirectory: string) {
     penWidth: book.penWidth
   };
 
-  // render front of
   for (let i = 0; i < book.sheetCount; i++) {
     const [front, back] = [book.renderSheet(i, true), book.renderSheet(i, false)];
+
+    front.polylines = optimizePolylines(front.polylines);
+    back.polylines = optimizePolylines(back.polylines);
 
     // write front of sheet
     fs.writeFileSync(

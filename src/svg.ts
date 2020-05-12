@@ -7,13 +7,22 @@ export interface RenderSettings {
   stroke: string;
 }
 
+function formatNumber(x: number): string {
+  const formatted = (Math.round(x * 1000) / 1000).toString();
+  const decimalIndex = formatted.indexOf(".");
+  const maxLength = decimalIndex + 5;
+  return decimalIndex > -1 && formatted.length > maxLength
+    ? formatted.slice(0, maxLength)
+    : formatted;
+}
+
 function polylineToSvgPath(polyline: Polyline, dpi: number): string {
   if (polyline.length < 2) return "";
 
-  let line = `M ${polyline[0][0] * dpi},${polyline[0][1] * dpi}`;
+  let line = `M${polyline[0][0] * dpi} ${polyline[0][1] * dpi}`;
   for (let i = 1; i < polyline.length; i++) {
     const [x, y] = polyline[i];
-    line += ` L ${x * dpi},${y * dpi}`;
+    line += ` L${formatNumber(x * dpi)} ${formatNumber(y * dpi)}`;
   }
 
   return line;
