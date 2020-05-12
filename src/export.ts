@@ -1,11 +1,7 @@
 import fs from "fs";
 import path from "path";
-import Book, { RenderPage, BookSettings } from "./book";
+import Book from "./book";
 import { renderSvg } from "./svg";
-
-export { RenderPage, PageContext } from "./book";
-export { Polyline } from "./polyline";
-export { default as DevServer } from "./server";
 
 function zeroPad(num: number, width: number): string {
   const numberDigits = ("" + num).length;
@@ -19,7 +15,7 @@ function generateFilename(printOrder: number, sheetNumber: number, isFront: bool
   }.svg`;
 }
 
-export function exportNotebook(book: Book, outputDirectory: string) {
+export default function exportNotebook(book: Book, outputDirectory: string) {
   if (!fs.existsSync(outputDirectory)) {
     throw new Error(`${outputDirectory} does not exist`);
   }
