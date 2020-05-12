@@ -17,25 +17,28 @@ html
         font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
       }
 
-      .svg-container {
-        background: #fff;
-        box-shadow: 0 0 4px rgba(0,0,0,0.1);
-      }
-
-      .toolbar-container {
+      .pages {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 2rem;
-        width: 25.5rem;
       }
 
       .page-number {
-        margin-right: 2rem;
+        text-align: center;
+        margin-bottom: .5rem;
+      }
+
+      .page-svg {
+        background: #fff;
+        box-shadow: 0 0 4px rgba(0,0,0,0.05);
+        border: 1px solid #ddd;
+      }
+
+      .page-container:not(:last-child) {
+        margin-right: .5rem;
       }
 
       .btn-container {
         display: flex;
+        margin-top: 1rem;
       }
 
       .btn {
@@ -72,6 +75,7 @@ html
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
       }
+
     script.
       const ws = new WebSocket('#{wsUrl}')
       ws.onmessage = event => {
@@ -80,23 +84,25 @@ html
       }
 
   body
-    .svg-container !{svg}
-    .toolbar-container
-      .page-number page #{pageNumber}/#{length}
-      .btn-container
-        if pageNumber > 1
-          a.btn.btn-first(href="/1") first
-        else
-          a.btn.btn-first.disabled(href="/1") first
-        if pageNumber > 1
-          a.btn.btn-back(href=`/${pageNumber - 1}`) back
-        else
-          a.btn.btn-back.disabled(href="#") back
-        if pageNumber < length
-          a.btn.btn-forward(href=`/${pageNumber + 1}`) next
-        else
-          a.btn.btn-forward.disabled(href="#") next
-        if pageNumber < length
-          a.btn.btn-last(href=`/${length}`) last
-        else
-          a.btn.btn-last.disabled(href=`/${length}`) last
+    .pages
+      each page in pages
+        .page-container
+          .page-number= `page ${page.num}/${length}`
+          .page-svg !{page.svg}
+    .btn-container
+      if pages[0].num > 1
+        a.btn.btn-first(href="/1") first
+      else
+        a.btn.btn-first.disabled(href="/1") first
+      if prevPage > 0
+        a.btn.btn-back(href=`/${prevPage}`) back
+      else
+        a.btn.btn-back.disabled(href="#") back
+      if nextPage <= length
+        a.btn.btn-forward(href=`/${nextPage}`) next
+      else
+        a.btn.btn-forward.disabled(href="#") next
+      if pages[pages.length-1].num < length
+        a.btn.btn-last(href=`/${length}`) last
+      else
+        a.btn.btn-last.disabled(href=`/${length}`) last

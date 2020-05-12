@@ -34,12 +34,26 @@ export default class DevServer {
 
     this.app.get("/:pageNumber(\\d+)", (req, res) => {
       const pageNumber = Number.parseInt(req.params.pageNumber);
-      const page = this.book.renderPage(pageNumber);
-      const svg = renderSvg(page, renderSettings);
+
+      if (pageNumber < 1) {
+        return res.redirect("/1");
+      }
+
+      if (pageNumber > this.book.length) {
+        return res.redirect(`/${this.book.length}`);
+      }
+
+      const pages = [Math.floor(pageNumber / 2) * 2, Math.floor(pageNumber / 2) * 2 + 1]
+        .filter(p => p > 0 && p <= this.book.length)
+        .map(num => ({ num, svg: renderSvg(this.book.renderPage(num), renderSettings) }));
+
+      const prevPage = Math.floor(pageNumber / 2) * 2 - 1;
+      const nextPage = Math.floor(pageNumber / 2) * 2 + 2;
+
       const length = this.book.length;
       const wsUrl = this.wsUrl;
 
-      res.render("view", { svg, pageNumber, length, wsUrl });
+      res.render("view", { pages, length, wsUrl, prevPage, nextPage });
     });
 
     this.app.get("/", (_, res) => {

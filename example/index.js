@@ -13,7 +13,7 @@ function circle(x, y, radius) {
   return line;
 }
 
-const length = 100;
+const length = 64;
 
 module.exports = new Book(
   ({ width, height, pageNumber }) => {
