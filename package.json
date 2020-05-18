@@ -1,6 +1,6 @@
 {
   "name": "plotterpress",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "bin": "dist/bin/cli.js",
@@ -8,10 +8,12 @@
     "prebuild": "rm -rf dist",
     "build": "tsc",
     "postbuild": "cp src/*.pug dist/src/",
-    "test:project": "npm run build && cd example && npm i ../ && npm run start"
+    "test:project": "npm run build && cd example && npm i ../ && npm run start",
+    "test:export": "ts-node bin/cli.ts example/index.js --export",
+    "test:dev": "ts-node bin/cli.ts example/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Noah Weiner (noahbweiner@gmail.com)",
   "license": "ISC",
   "dependencies": {
     "@types/chokidar": "^2.1.3",
