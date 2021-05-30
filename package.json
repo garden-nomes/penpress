@@ -22,7 +22,7 @@
     "chokidar": "^3.4.0",
     "express": "^4.17.1",
     "pug": "^2.0.4",
-    "ws": "^7.3.0"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "@types/node": "^13.13.5",
